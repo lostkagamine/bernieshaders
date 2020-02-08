@@ -33,6 +33,7 @@ function love.update(dt)
     if both:hasUniform('time') then
         both:send('time', t)
     end
+    love.window.setTitle('Bernie Shaders - '..love.timer.getFPS()..'FPS')
 end
 
 function i(a, b, c)
