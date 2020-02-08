@@ -1,3 +1,13 @@
+--[[
+    -= Bernie Shaders =-
+    (main.lua)
+
+    Written by Rin, 2020
+
+    This came about because I was messing with GLSL and then thought of Bernie Sanders
+    honestly why do I do these things
+]]
+
 bernie = love.graphics.newImage('bernie.jpg')
 font = love.graphics.newFont(15)
 
