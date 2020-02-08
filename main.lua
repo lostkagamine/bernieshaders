@@ -21,17 +21,23 @@ loadShaders()
 --ts = love.timer.getTime()
 t = 0
 mode = 0
+curshader = vert
 function love.update(dt)
     --t = love.timer.getTime() - ts
     t = t + dt
-    if vert:hasUniform('time') then
-        vert:send('time', t)
+    if mode == 0 then
+        curshader = vert
+    elseif mode == 1 then
+        curshader = frag
+    else
+        curshader = both
     end
-    if frag:hasUniform('time') then
-        frag:send('time', t)
+    if curshader:hasUniform('time') then
+        curshader:send('time', t)
     end
-    if both:hasUniform('time') then
-        both:send('time', t)
+    local w, h, f = love.window.getMode()
+    if curshader:hasUniform('size') then
+        curshader:send('size', {bernie:getWidth(), bernie:getHeight()})
     end
     love.window.setTitle('Bernie Shaders - '..love.timer.getFPS()..'FPS')
 end
@@ -41,18 +47,12 @@ function i(a, b, c)
 end
 
 function love.draw()
-    if mode == 0 then
-        love.graphics.setShader(vert)
-    elseif mode == 1 then
-        love.graphics.setShader(frag)
-    else
-        love.graphics.setShader(both)
-    end
+    love.graphics.setShader(curshader)
     love.graphics.draw(bernie, (800/2)-(bernie:getWidth()/2), (600/2)-(bernie:getHeight()/2))
     love.graphics.setShader()
     love.graphics.setFont(font)
     local one = font:getHeight('gl')+2
-    love.graphics.print('mode: '..i(mode == 1, 'frag', i(mode == 0, 'vert', 'both'))..' - space to switch mode, R to reload, S to reset, A for both', 0, 0)
+    love.graphics.print('mode: '..i(mode == 1, 'frag', i(mode == 0, 'vert', 'both'))..' - space to switch mode, R to reload shader files, S to reset time, A for both', 0, 0)
     love.graphics.print('FPS '..love.timer.getFPS()..' / time='..t, 0, one)
 end
 
